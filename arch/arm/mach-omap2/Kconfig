@@ -525,8 +525,6 @@ config OMAP4460_GPU_OVERCLOCK
 	help
 	  Enables the 512 MHz GPU frequency for OMAP4460 devices.
 
-endmenu
-
 config FORCE_FAST_CHARGE
 	bool "Force AC charge mode at will"
 	default y
@@ -534,4 +532,13 @@ config FORCE_FAST_CHARGE
 	  A simple sysfs interface to force adapters that
 	  are detected as USB to charge as AC.
 
+config POGO_FORCE_FAST_CHARGE
+	bool "Force AC charge mode for dock (pogo pins)"
+	default n
+	help
+	  Always force the dock interface (pogo pins) to charge as AC (breaks other dock usage).
+
+endmenu
+
 endif
+

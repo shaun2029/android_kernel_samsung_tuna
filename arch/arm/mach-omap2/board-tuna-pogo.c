@@ -184,6 +184,12 @@ static int pogo_detect_callback(struct otg_id_notifier_block *nb)
 				pr_err("Unable to identify pogo dock\n");
 				return OTG_ID_UNHANDLED;
 			}
+			
+            #ifdef CONFIG_POGO_FORCE_FAST_CHARGE
+            pogo->dock_type |= POGO_DOCK_CHARGER;
+            pogo->dock_type |= POGO_DOCK_DOCKED;
+            continue;
+            #endif
 
 			/* Start the detection process by sending a wake pulse
 			 * to the dock.
