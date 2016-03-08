@@ -172,6 +172,12 @@ static int pogo_detect_callback(struct otg_id_notifier_block *nb)
 	if (gpio_get_value(GPIO_POGO_DET)) {
 		wake_lock(&pogo->wake_lock);
 
+        #ifdef CONFIG_POGO_FORCE_FAST_CHARGE
+        pogo->dock_type |= POGO_DOCK_CHARGER;
+        pogo->dock_type |= POGO_DOCK_DESK;
+        pogo->dock_type |= POGO_DOCK_DOCKED;
+        #endif
+
 		while (!(pogo->dock_type & POGO_DOCK_DOCKED)) {
 
 			if (!gpio_get_value(GPIO_POGO_DET)) {
@@ -180,17 +186,18 @@ static int pogo_detect_callback(struct otg_id_notifier_block *nb)
 			}
 
 			if (retry++ > POGO_DOCK_ID_MAX_RETRY) {
+                #ifdef CONFIG_POGO_FALLBACK_FAST_CHARGE
+                pogo->dock_type |= POGO_DOCK_CHARGER;
+                pogo->dock_type |= POGO_DOCK_DESK;
+                pogo->dock_type |= POGO_DOCK_DOCKED;
+                continue;
+                #else
 				wake_unlock(&pogo->wake_lock);
 				pr_err("Unable to identify pogo dock\n");
 				return OTG_ID_UNHANDLED;
+                #endif
 			}
 			
-            #ifdef CONFIG_POGO_FORCE_FAST_CHARGE
-            pogo->dock_type |= POGO_DOCK_CHARGER;
-            pogo->dock_type |= POGO_DOCK_DOCKED;
-            continue;
-            #endif
-
 			/* Start the detection process by sending a wake pulse
 			 * to the dock.
 			 */

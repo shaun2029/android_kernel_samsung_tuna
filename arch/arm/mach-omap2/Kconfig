@@ -537,6 +537,12 @@ config POGO_FORCE_FAST_CHARGE
 	default n
 	help
 	  Always force the dock interface (pogo pins) to charge as AC (breaks other dock usage).
+	  
+config POGO_FALLBACK_FAST_CHARGE
+	bool "Dock will use AC charge mode for dock (pogo pins)"
+	default n
+	help
+	  The dock interface (pogo pins) will use AC charge mode if no dock type detected.
 
 endmenu
 
